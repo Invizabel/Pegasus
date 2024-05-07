@@ -53,16 +53,20 @@ def connect(prompt):
     else:
         new_prompt = prompt
 
-    client = instructor.from_openai(OpenAI(api_key = api_key, base_url = f"http://{my_ip}:11434/v1"), mode = instructor.Mode.JSON)
+    try:
+        client = instructor.from_openai(OpenAI(api_key = api_key, base_url = f"http://{my_ip}:11434/v1"), mode = instructor.Mode.JSON)
 
-    gpt_response = client.chat.completions.create(messages = [{"role": "system", "content": new_prompt}], model = "llama3", response_model = My_Models, max_retries = 10)
-    data = json.dumps(gpt_response.model_dump(), indent = 4)
-    results = json.loads(data)["my_models"].items()
+        gpt_response = client.chat.completions.create(messages = [{"role": "system", "content": new_prompt}], model = "llama3", response_model = My_Models, max_retries = 10)
+        data = json.dumps(gpt_response.model_dump(), indent = 4)
+        results = json.loads(data)["my_models"].items()
 
-    old_prompt = prompt
+        old_prompt = prompt
 
-    for key, value in results:
-        return value
+        for key, value in results:
+            return value
+
+    except:
+        return "I'm sorry, there is a problem connecting to the api! Please try again!"
 
 def main():
     global old_response
