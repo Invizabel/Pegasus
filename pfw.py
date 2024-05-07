@@ -47,18 +47,22 @@ def transforn(file_dict):
 
 def train(packet):
     if packet.haslayer(ARP):
+        print(packet.summary())
         with open("arp_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
     if packet.haslayer(DNS):
+        print(packet.summary())
         with open("dns_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
     if packet.haslayer(TCP) and packet[TCP].dport == 80 or packet.haslayer(TCP) and packet[TCP].sport == 80 or packet.haslayer(TCP) and packet[TCP].dport == 8080 or packet.haslayer(TCP) and packet[TCP].sport == 8080:
+        print(packet.summary())
         with open("http_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
     if packet.haslayer(TCP) and packet[TCP].dport == 443 or packet.haslayer(TCP) and packet[TCP].sport == 443 or packet.haslayer(TCP) and packet[TCP].dport == 8443 or packet.haslayer(TCP) and packet[TCP].sport == 8443:
+        print(packet.summary())
         with open("https_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
