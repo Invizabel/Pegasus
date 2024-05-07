@@ -52,6 +52,12 @@ def train(packet):
         with open("arp_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
+    # DHCP
+    if packet.haslayer(DHCP):
+        print(packet.summary())
+        with open("dhcp_dump.txt", "a") as file:
+            file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
+
     # DNS
     if packet.haslayer(DNS):
         print(packet.summary())
@@ -87,7 +93,7 @@ def main():
         sniff(prn=train)
 
     if args.mode == "transform":
-        file_dict = {"ARP": "arp_dump.txt", "DNS": "dns_dump.txt", "HTTP": "http_dump.txt", "HTTPS": "https_dump.txt", "SSH": "ssh_dump.txt"}
+        file_dict = {"ARP": "arp_dump.txt", "DHCP": "dhcp_dump.txt", "DNS": "dns_dump.txt", "HTTP": "http_dump.txt", "HTTPS": "https_dump.txt", "SSH": "ssh_dump.txt"}
         models = transforn(file_dict)
 
         with open("model.csv", "w") as file:
