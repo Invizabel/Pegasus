@@ -76,6 +76,7 @@ def main():
         else:
             print(prompt)
             response = connect(prompt)
+            print(response)
             old_response = response
             voice(response)
 
