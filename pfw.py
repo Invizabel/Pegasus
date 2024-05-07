@@ -66,6 +66,11 @@ def train(packet):
         with open("https_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
+    if packet.haslayer(TCP) and packet[TCP].dport == 22 or packet.haslayer(TCP) and packet[TCP].sport == 22:
+        print(packet.summary())
+        with open("ssh_dump.txt", "a") as file:
+            file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
+
 
 def main():
     os.system("clear")
@@ -78,7 +83,7 @@ def main():
         sniff(prn=train)
 
     if args.mode == "transform":
-        file_dict = {"ARP": "arp_dump.txt", "DNS": "dns_dump.txt", "HTTP": "http_dump.txt", "HTTPS": "https_dump.txt"}
+        file_dict = {"ARP": "arp_dump.txt", "DNS": "dns_dump.txt", "HTTP": "http_dump.txt", "HTTPS": "https_dump.txt", "SSH": "ssh_dump.txt"}
         models = transforn(file_dict)
 
         with open("model.csv", "w") as file:
