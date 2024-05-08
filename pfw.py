@@ -2,14 +2,15 @@ import argparse
 import binascii
 import os
 import re
-import threading
 from collections import Counter
 from scapy.all import *
 
-def transforn(file_dict):
+CYAN = "\033[1;36m"
+
+def transform(file_dict):
     models = []
     for key, value in file_dict.items():
-        print(f"transforming: {key}")
+        print(CYAN + f"transforming: {key}")
         try:
             # open files
             with open(value, "r") as file:
@@ -48,31 +49,31 @@ def transforn(file_dict):
 def train(packet):
     # ARP
     if packet.haslayer(ARP):
-        print(packet.summary())
+        print(CYAN + packet.summary())
         with open("arp_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
     # DHCP
     if packet.haslayer(DHCP):
-        print(packet.summary())
+        print(CYAN + packet.summary())
         with open("dhcp_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
     # DNS
     if packet.haslayer(DNS):
-        print(packet.summary())
+        print(CYAN + packet.summary())
         with open("dns_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
     # HTTP
     if packet.haslayer(TCP) and packet[TCP].dport == 80 or packet.haslayer(TCP) and packet[TCP].sport == 80 or packet.haslayer(TCP) and packet[TCP].dport == 8080 or packet.haslayer(TCP) and packet[TCP].sport == 8080:
-        print(packet.summary())
+        print(CYAN + packet.summary())
         with open("http_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
     # HTTPS
     if packet.haslayer(TCP) and packet[TCP].dport == 443 or packet.haslayer(TCP) and packet[TCP].sport == 443 or packet.haslayer(TCP) and packet[TCP].dport == 8443 or packet.haslayer(TCP) and packet[TCP].sport == 8443:
-        print(packet.summary())
+        print(CYAN + packet.summary())
         with open("https_dump.txt", "a") as file:
             file.write(f"{binascii.hexlify(raw(packet)).decode()}\n")
 
@@ -88,7 +89,7 @@ def main():
 
     if args.mode == "transform":
         file_dict = {"ARP": "arp_dump.txt", "DHCP": "dhcp_dump.txt", "DNS": "dns_dump.txt", "HTTP": "http_dump.txt", "HTTPS": "https_dump.txt"}
-        models = transforn(file_dict)
+        models = transform(file_dict)
 
         with open("model.csv", "w") as file:
             file.write("protocol,hex,vector\n")
