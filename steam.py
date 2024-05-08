@@ -141,7 +141,7 @@ def train(crawl_len):
     
     links = []
     for site in sites:
-        crawled = kitten_crawler(site, crawl = crawl_len)
+        crawled = kitten_crawler(site, crawl = crawl_len ,ethics = True)
         for i in crawled:
             links.append(i)
 
