@@ -11,7 +11,6 @@ CYAN = "\033[1;36m"
 
 def transform(sentence_hits, word_hits):
     sentence_models = []
-    word_models = []
     model = {}
 
     # process data
@@ -37,6 +36,9 @@ def transform(sentence_hits, word_hits):
         new_model[i] = j / count
 
     sentence_models.append(new_model)
+
+    word_models = []
+    model = {}
 
     # process data
     count = 0
