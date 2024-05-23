@@ -117,8 +117,6 @@ def main():
                    ["large", 1000],
                    ["xl", 10000]]
 
-        samples = [["large", 1000]]
-
         tolerances = [8, 16, 32, 64]
 
         for tolerance in tolerances:
