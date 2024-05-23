@@ -112,10 +112,10 @@ def main():
         generate(args.model)
 
     if args.mode == "train":
-        '''samples = [["low", 10],
+        samples = [["low", 10],
                    ["medium", 100],
                    ["large", 1000],
-                   ["xl", 10000]]'''
+                   ["xl", 10000]]
 
         samples = [["large", 1000]]
 
