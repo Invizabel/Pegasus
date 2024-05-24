@@ -70,35 +70,54 @@ def train(samples, my_model, tolerance):
         files = os.listdir(folder)
 
         images = []
-        
+
+        print(CYAN + "loading images")
         for file in files:
-            print(CYAN + f"{folder}/{file}")
             image = Image.open(f"{folder}/{file}").convert("RGBA")
             image = image.resize((64, 64))
             images.append(image)
 
-        for sample in samples:
-            with open(f"model_{sample[0]}_t{tolerance}.csv", "w") as file:
-                file.write("x,y,pixel,vector\n")
+    for sample in samples:
+        with open(f"model_{sample[0]}_tolerance_{tolerance}.csv", "w") as file:
+            file.write("x,y,pixel,vector\n")
 
-            for x in range(0, 64):
-                for y in range(0, 64):
-                    print(CYAN + f"{sample[0]}/t{tolerance}: ({x}, {y})")
-                    models = []
-                    pixels = []
-                    for image in images:
-                        # process pixels: (x, y)
-                        r, g, b, a = image.getpixel((x, y))
-                        pixels.append(numba_train(r, g, b, a, tolerance))
+        temp_models = []
 
-                    tokens = Counter(pixels).most_common(sample[1])
-                    for token in tokens:
-                        models.append([str(x), str(y), str(token[0]), str(token[1])])
+        print(CYAN + f"{sample[0]}/tolerance-{tolerance}")
 
-                    with open(f"model_{sample[0]}_t{tolerance}.csv", "a") as file:
-                        for model in models:
-                            file.write(f"{model[0]},{model[1]},{model[2].replace(',', ';')},{model[3]}\n")
+        for x in range(0, 64):
+            for y in range(0, 64):
+                pixels = []
+                for image in images:
+                    # process pixels: (x, y)
+                    r, g, b, a = image.getpixel((x, y))
+                    pixels.append(numba_train(r, g, b, a, tolerance))
 
+                tokens = Counter(pixels).most_common(sample[1])
+                for token in tokens:
+                    temp_models.append([str(x), str(y), str(token[0]), str(token[1])])
+
+        print(CYAN + f"transforming data for {sample[0]}/tolerance-{tolerance}")
+        count = 0
+        temp_var = 0
+        models = []
+        temp_models.sort(key = lambda x: x[2])
+        for temp in temp_models:
+            if temp_var != temp[2]:
+                count += 1
+                models.append([temp[0], temp[1], count, temp[3]])
+
+            else:
+                 models.append([temp[0], temp[1], count, temp[3]])
+
+            temp_var = temp[2]
+
+        models.sort(key = lambda x: (str(x[0]), str(x[1]), str(x[2]), str(x[3])))
+
+        with open(f"model_{sample[0]}_tolerance_{tolerance}.csv", "a") as file:
+            for model in models:
+                file.write(f"{model[0]},{model[1]},{model[2]},{model[3]}\n")
+                
 def main():
     os.system("clear")
     
@@ -117,7 +136,7 @@ def main():
                    ["large", 1000],
                    ["xl", 10000]]
 
-        tolerances = [8, 16, 32, 64]
+        tolerances = [4, 8, 16, 32, 64]
 
         for tolerance in tolerances:
             train(samples, args.model, tolerance)
