@@ -1,5 +1,4 @@
 import argparse
-import numpy as np
 import os
 import random
 import re
@@ -51,9 +50,6 @@ def generate(my_model):
 
     if "large" in my_model:
         noise = random.randint(0, 1000 - 2)
-
-    if "xl" in my_model:
-        noise = random.randint(0, 10000 - 2)
 
     for data_set in data_sets:
         image.putpixel((int(data_set[0][0]), int(data_set[0][1])), (int(data_set[noise][2].split(",")[0].replace("(", "")), int(data_set[noise][2].split(",")[1]), int(data_set[noise][2].split(",")[2]), int(data_set[noise][2].split(",")[3].replace(")", ""))))
@@ -133,10 +129,9 @@ def main():
     if args.mode == "train":
         samples = [["low", 10],
                    ["medium", 100],
-                   ["large", 1000],
-                   ["xl", 10000]]
+                   ["large", 1000]]
 
-        tolerances = [4, 8, 16, 32, 64]
+        tolerances = [2, 4, 8, 16, 32, 64]
 
         for tolerance in tolerances:
             train(samples, args.model, tolerance)
