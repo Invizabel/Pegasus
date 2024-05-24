@@ -79,7 +79,7 @@ def train(samples, my_model, tolerance):
 
         temp_models = []
 
-        print(CYAN + f"{sample[0]}/tolerance-{tolerance}")
+        print(CYAN + f"training on {sample[0]}/tolerance-{tolerance}")
 
         for x in range(0, 64):
             for y in range(0, 64):
@@ -131,7 +131,7 @@ def main():
                    ["medium", 100],
                    ["large", 1000]]
 
-        tolerances = [2, 4, 8, 16, 32, 64]
+        tolerances = [1, 2, 4, 8, 16, 32, 64]
 
         for tolerance in tolerances:
             train(samples, args.model, tolerance)
